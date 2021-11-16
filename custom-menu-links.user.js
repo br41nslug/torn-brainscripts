@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainTools: Custom Menu Links
 // @namespace    brainslug.torn.utility
-// @version      0.1
+// @version      0.2
 // @description  Inject custom menu links inspired by torntools
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/*
@@ -60,51 +60,51 @@ const findClass = (cls, elem) => {
     return result;
 };
 
-(function () {
-    const injectLink = (link, elem, inject) => inject(_elem('div', {
-        cls: ['brain-link', findClass(/^area-desktop_/, elem)],
-        children: [_elem('div', {
-            cls: findClass(/^area-row_/, elem.children[0]),
-            children: [_elem('a', {
-                cls: findClass(/^desktopLink_/, elem.children[0].children[0]),
-                href: link.target,
-                children: [
-                    _elem('span', {
-                        cls: 'icon',
-                        html:  link.icon || '',
-                    }),
-                    _elem('span', {
-                        cls: findClass(/^linkName_/, elem.children[0].children[0].children[1]),
-                        text: link.label,
-                    }),
-                ]
-            })]
+const injectLink = (link, elem, inject) => inject(_elem('div', {
+    cls: ['brain-link', findClass(/^area-desktop_/, elem)],
+    children: [_elem('div', {
+        cls: findClass(/^area-row_/, elem.children[0]),
+        children: [_elem('a', {
+            cls: findClass(/^desktopLink_/, elem.children[0].children[0]),
+            href: link.target,
+            children: [
+                _elem('span', {
+                    cls: 'icon',
+                    html:  link.icon || '',
+                }),
+                _elem('span', {
+                    cls: findClass(/^linkName_/, elem.children[0].children[0].children[1]),
+                    text: link.label,
+                }),
+            ]
         })]
-    }), elem);
-    // inject links
-    customLinks.forEach(link => {
-        if (!link.before && !link.after) return console.error('bad link', link);
-        const position = !! link.before ? 'before' : 'after';
-        watchNav(link[position]).then(element => {
-            // get damn dynamically generated classes xP
-            const className = findClass(/^area-desktop_/, element);
-            console.log('[BrainTools]', 'injecting custom link', link);
-            injectLink(link, element, (position == 'before') ? insertBefore : insertAfter);
-        });
+    })]
+}), elem);
+
+// inject links
+customLinks.forEach(link => {
+    if (!link.before && !link.after) return console.error('bad link', link);
+    const position = !! link.before ? 'before' : 'after';
+    watchNav(link[position]).then(element => {
+        // get damn dynamically generated classes xP
+        const className = findClass(/^area-desktop_/, element);
+        console.log('[BrainTools]', 'injecting custom link', link);
+        injectLink(link, element, (position == 'before') ? insertBefore : insertAfter);
     });
-    // inject styles
-    GM_addStyle(`
-    .brain-link a .icon {
-        float: left;
-        width: 34px;
-        height: 23px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: row;
-        margin-left: 0;
-    }
-    `);
-})();
+});
+
+// inject styles
+GM_addStyle(`
+.brain-link a .icon {
+    float: left;
+    width: 34px;
+    height: 23px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    margin-left: 0;
+}
+`);
