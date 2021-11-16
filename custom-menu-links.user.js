@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Brain Tools: Fix Menu Links
-// @namespace    brainslug.torn.racing
+// @name         BrainTools: Custom Menu Links
+// @namespace    brainslug.torn.utility
 // @version      0.1
 // @description  Inject custom menu links inspired by torntools
 // @author       Brainslug [2323221]
