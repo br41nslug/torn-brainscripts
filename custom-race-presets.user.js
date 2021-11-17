@@ -53,7 +53,6 @@
 
 // Preset Class
 function PresetHandler() {
-    const self = this || {};
     const STORE_KEY = "BR_CRP_RACE_PRESETS";
     const TRACKS = {
         "6": "Uptown",       "7": "Withdrawal",  "8": "Underdog",
@@ -67,7 +66,7 @@ function PresetHandler() {
     let isDeleting = false;
     let $saveButton, $deletLink, $presetContainer;
 
-    // private functions
+    // methods
     function InjectSaveButton() {
         const elem = $(`<span class="btn-wrap brain-button">
             <span class="btn">
@@ -79,7 +78,7 @@ function PresetHandler() {
             const race = getCustomRaceForm();
             presets.push(race);
             const btn = $(`<button class="torn-btn preset-btn">${race.name}</button>`);
-            btn.on('click', function () { fillPreset(race); });
+            btn.on('click', clickPreset(race));
             $('.filter-container .bottom-round').append(btn);
             savePresets();
             return false;
@@ -112,18 +111,22 @@ function PresetHandler() {
         $presetContainer.empty();
         presets.forEach(function(p) {
             const btn = $(`<button class="torn-btn preset-btn">${p.name}</button>`);
-            btn.on('click', function () { 
-                if (isDeleting) {
-                    var index = presets.indexOf(p);
-                    if (index !== -1) presets.splice(index, 1);
-                    $(this).remove();
-                    savePresets();
-                } else {
-                    fillPreset(p); 
-                }
-            });
+            btn.on('click', clickPreset(p));
             $presetContainer.append(btn);
         })
+    }
+
+    function clickPreset(race) {
+        return function () {
+            if (isDeleting) {
+                var index = presets.indexOf(race);
+                if (index !== -1) presets.splice(index, 1);
+                $(this).remove();
+                savePresets();
+            } else {
+                fillPreset(race); 
+            }
+        }
     }
     
     function fillPreset(race) {
@@ -188,7 +191,6 @@ function PresetHandler() {
     InjectSaveButton();
     InjectPresetBar();
     RenderPresetButtons();
-    return self;
 }
 
 // init
