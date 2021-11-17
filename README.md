@@ -8,3 +8,4 @@ Racing:
 - [Custom Race Presets](custom-race-presets.user.js)
 - [Full Heigh Driver Panel](racing-full-height.user.js)
 - [Always On Top](racing-always-on-top.user.js)
+- [Change Racing Banner](racing-change-banner.user.js)
