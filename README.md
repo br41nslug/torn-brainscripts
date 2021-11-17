@@ -6,3 +6,4 @@ Utility:
 
 Racing:
 - [Custom Race Presets](custom-race-presets.user.js)
+- [Full Heigh Driver Panel](racing-full-height.user.js)
