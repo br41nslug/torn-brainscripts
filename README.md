@@ -10,3 +10,4 @@ Racing:
 - [Always On Top](racing-always-on-top.user.js)
 - [Change Racing Banner](racing-change-banner.user.js)
 - [Race Charts](racing-charts.user.js)
+- [Hide Position Badge](racing-hide-re-position.user.js)
