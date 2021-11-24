@@ -6,7 +6,7 @@
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
-// @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/custom-race-presets.user.js
+// @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-race-presets.user.js
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
