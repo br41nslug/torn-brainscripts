@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainTools: Custom Menu Links
 // @namespace    brainslug.torn.utility
-// @version      0.2
+// @version      0.3
 // @description  Inject custom menu links inspired by torntools
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/*
@@ -10,6 +10,15 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
+/**
+ * This list configures which items will be added to the menu.
+ * An item may contain the following settings:
+ *  label: This is the text in the link
+ *  after/before: Where the link will be inserted (available choices below)
+ *  target: The page you are linking to. For torn pages only the "/bazaar.php" part is needed but for external pages you need the full "https://example.com" domain.
+ *  icon: For lack of a better solution yet this is plain html to be injected. The icons i used here with the exception of the bazaar were taken from the city map list.
+ *  newTab: true/false defaults to false, whether to open a new tab when you click the link
+ */
 const customLinks = [
     { label: "Raceway", after: "home", target: "/loader.php?sid=racing", icon: '<i class="cql-race-track"></i>' },
     { label: "Item Market", before: "items", target: "/imarket.php", icon: '<i class="cql-item-market"></i>' },
@@ -17,14 +26,36 @@ const customLinks = [
     { label: "Pharmacy", before: "city", target: "/shops.php?step=pharmacy", icon: '<i class="cql-pharmacy"></i>' },
     { label: "Travel Agency", after: "hall_of_fame", target: "/travelagency.php", icon: '<i class="cql-travel-agency"></i>' },
 ];
+/**
+ * Torn Menu Items:
+ * - home
+ * - items
+ * - city
+ * - job
+ * - gym
+ * - properties
+ * - education
+ * - crimes
+ * - missions
+ * - newspaper
+ * - jail
+ * - hospital
+ * - casino
+ * - forums
+ * - hall_of_fame
+ * - my_faction
+ * - recruit_citizens
+ * - competitions
+ */
 
-const insertBefore = (newNode, referenceNode) => referenceNode.parentNode.insertBefore(newNode, referenceNode);
-const insertAfter = (newNode, referenceNode) => referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-const _elem = (tag, attrs={}) => {
-    const elem = document.createElement(tag);
+const tag = tagName => (attrs={}) => {
+    const elem = document.createElement(tagName);
     if ( !! attrs.text) elem.innerText = attrs.text;
     if ( !! attrs.html) elem.innerHTML = attrs.html;
-    if ( !! attrs.href && tag == 'a') elem.href = attrs.href;
+    if (tagName == 'a') {
+        if ( !! attrs.href) elem.href = attrs.href;
+        if ( !! attrs.target) elem.target = attrs.target;
+    }
     if ( !! attrs.cls) {
         if (Array.isArray(attrs.cls)) attrs.cls.forEach(c => elem.classList.add(c));
         else elem.classList.add(attrs.cls);
@@ -32,64 +63,61 @@ const _elem = (tag, attrs={}) => {
     if ( !! attrs.children) attrs.children.forEach(child => elem.append(child));
     return elem;
 };
-const _watcher = (query='querySelector') => (selector, timeout=50, retries=50) => new Promise((resolve, reject) => {
+
+const watchNav = (linkname, timeout=50, retries=50) => new Promise((resolve, reject) => {
     let count = 0;
     const interval = setInterval(() => {
-        const $elem = unsafeWindow.document[query](selector);
+        const $elem = unsafeWindow.document['querySelector']('#nav-'+linkname);
         if ( !! $elem) {
             clearInterval(interval);
             return resolve($elem);
         }
         if (count >= retries) {
             clearInterval(interval);
-            console.warning(`Max retries(${retries}) reached for "${selector}"!`);
+            console.error(`Max retries(${retries}) reached for "#nav-${linkname}"!`);
             return reject();
         }
         count++;
     }, timeout);
 });
 
-const watchDom = _watcher('querySelector'),
-      watchDomAll = _watcher('querySelectorAll'),
-      watchNav = linkname => _watcher('querySelector')('#nav-'+linkname);
-
 const findClass = (cls, elem) => {
     let result = '';
     elem.classList.forEach(className => cls.test(className) && (result = className));
-    if (result === '') console.error('[findClass]','class not found!', cls, elem);
+    if (result === '') console.error('[BrainTools]', 'class not found!', cls, elem);
     return result;
 };
 
-const injectLink = (link, elem, inject) => inject(_elem('div', {
+const injectLink = (link, elem) => elem.parentNode.insertBefore(tag`div`({
     cls: ['brain-link', findClass(/^area-desktop_/, elem)],
-    children: [_elem('div', {
+    children: [tag`div`({
         cls: findClass(/^area-row_/, elem.children[0]),
-        children: [_elem('a', {
+        children: [tag`a`({
             cls: findClass(/^desktopLink_/, elem.children[0].children[0]),
             href: link.target,
+            target: !! link.newTab ? '_blank' : '_self',
             children: [
-                _elem('span', {
+                tag`span`({
                     cls: 'icon',
                     html:  link.icon || '',
                 }),
-                _elem('span', {
+                tag`span`({
                     cls: findClass(/^linkName_/, elem.children[0].children[0].children[1]),
                     text: link.label,
                 }),
             ]
         })]
     })]
-}), elem);
+}), !! link.before ? elem : elem.nextSibling);
 
 // inject links
 customLinks.forEach(link => {
-    if (!link.before && !link.after) return console.error('bad link', link);
-    const position = !! link.before ? 'before' : 'after';
-    watchNav(link[position]).then(element => {
-        // get damn dynamically generated classes xP
-        const className = findClass(/^area-desktop_/, element);
-        console.log('[BrainTools]', 'injecting custom link', link);
-        injectLink(link, element, (position == 'before') ? insertBefore : insertAfter);
+    if ((! link.before && ! link.after) || ! link.target || ! link.label) 
+        return console.error('[BrainTools]', 'Bad link configured', link);
+    const selector = !! link.before ? link.before : link.after;
+    watchNav(selector).then(element => {
+        console.info('[BrainTools]', 'Injecting custom link', link.label, link.target);
+        injectLink(link, element);
     });
 });
 
