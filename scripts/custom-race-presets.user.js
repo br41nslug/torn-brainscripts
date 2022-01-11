@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Custom Race Presets
 // @namespace    brainslug.torn.racing
-// @version      0.2
+// @version      0.3
 // @description  Adding quick preset links for dedicated racers.
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -78,7 +78,7 @@ function PresetHandler() {
             const race = getCustomRaceForm();
             presets.push(race);
             const btn = $(`<button class="torn-btn preset-btn">${race.name}</button>`);
-            btn.on('click', clickPreset(race));
+            btn.on('click', clickPreset(normalizePreset(race)));
             $('.filter-container .bottom-round').append(btn);
             savePresets();
             return false;
@@ -124,11 +124,11 @@ function PresetHandler() {
                 $(this).remove();
                 savePresets();
             } else {
-                fillPreset(race); 
+                fillPreset(race);
             }
         }
     }
-    
+
     function fillPreset(race) {
         if ( !! race.name) $('.race-wrap div.input-wrap input').attr('value', race.name);
         if ( !! race.minDrivers) $('.drivers-min-wrap div.input-wrap input').attr('value', race.minDrivers);
@@ -141,12 +141,12 @@ function PresetHandler() {
             $('#select-racing-track').selectmenu();
             $('#select-racing-track-menu > li:contains(' + race.trackName + ')').mouseup();
         }
-        if ( !! race.upgradesAllowed) {
+        if ( !! race.upgradesAllowedString) {
             $('#select-allow-upgrades').selectmenu();
             $('#select-allow-upgrades-menu > li:contains(' + race.upgradesAllowedString + ')').mouseup();
         }
     }
-    
+
     function normalizePreset(item, index=0) {
         if ( !! item.name && item.name.length > 25) item.name = item.name.substring(0, 26);
         if ( ! item.name) item.name = "Preset " + (+index + 1);
@@ -154,7 +154,7 @@ function PresetHandler() {
         if ( !! item.minDrivers) item.minDrivers = (item.minDrivers < 2) ? 2 : (item.minDrivers >= item.maxDrivers) ? item.maxDrivers - 1 : item.minDrivers;
         if ( !! item.trackName) item.trackName = item.trackName.toLowerCase().split(' ').map(x => x.charAt(0).toUpperCase() + x.substring(1)).join(' ');
         if ( !! item.numberOfLaps) item.numberOfLaps = (item.numberOfLaps > 100) ? 100 : (item.numberOfLaps < 1) ? 1 : item.numberOfLaps;
-        if ( !! item.upgradesAllowed) item.upgradesAllowedString = item.upgradesAllowed ? "Allow upgrades" : "Stock cars only";
+        item.upgradesAllowedString = !item.hasOwnProperty('upgradesAllowed') || !!item.upgradesAllowed ? "Allow upgrades" : "Stock cars only";
         if ( !! item.betAmount) item.betAmount = (item.betAmount > 10000000) ? 10000000 : (item.betAmount < 0) ? 0 : item.betAmount;
         if ( !! item.waitTime) item.waitTime = (item.waitTime > 2880) ? 2880 : (item.waitTime < 1) ? 1 : item.waitTime;
         if ( !! item.password && item.password.length > 25) item.password = item.password.substring(0, 26);
@@ -172,11 +172,12 @@ function PresetHandler() {
                 case 'betAmount': race.betAmount = parseInt(cur.value); break;
                 case 'waitTime': race.waitTime = parseInt(cur.value); break;
                 case 'password': race.password = cur.value; break;
+                case 'carsTypeAllowed': race.upgradesAllowed = cur.value === '1'; break;
             }
             return race;
         }, {});
     }
-    
+
     function loadPresets() {
         const savedPresets = JSON.parse(GM_getValue(STORE_KEY, "[]"));
         return [].concat(PRESETS).map(item => { item.static = true; return item; }).concat(savedPresets);
@@ -186,7 +187,7 @@ function PresetHandler() {
             return !preset.static;
         })));
     }
-    
+
     // constructor
     InjectSaveButton();
     InjectPresetBar();
