@@ -75,17 +75,11 @@ function parseLapData(results, lap, last) {
             formatTimeSec(rt - lt)
         ];
     });
-    // updateLeaderboard(lap, diffs);
-    // console.log('lap', lap);
-    // for ( const [p, t] of diffs) {
-    //     console.info(p, t);
-    // }
 }
 
 // time format
 function formatTimeSec(sec) {
     const _sec = Math.abs(sec);
-    console.log(sec);
     if (_sec > 999) return sec.toFixed(0);
     if (_sec > 99) return sec.toFixed(1);
     if (_sec > 9) return sec.toFixed(2);
