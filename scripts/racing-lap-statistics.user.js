@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.1-beta
+// @version      0.2
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -85,13 +85,14 @@ function formatTimeSec(sec) {
     if (_sec > 9) return sec.toFixed(2);
     return sec.toFixed(3);
 }
-function formatTimeMsec(msec, alwaysShowHours = false) {
+function formatTimeMsec(msec) {
     const hours = Math.floor((msec % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((msec % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((msec % (1000 * 60)) / 1000);
     const mseconds = Math.floor(msec % 1000);
-
-    return (alwaysShowHours ? pad(hours, 2) + ":" : (hours > 0 ? hours + ":" : '')) + (hours > 0 || minutes > 0 ? pad(minutes, 2) + ":" : '') + pad(seconds, 2) + "." + pad(mseconds, 3);
+    if (hours > 0) return pad(hours, 2) + "h" + pad(minutes, 2) + "m";
+    if (minutes > 0) return pad(minutes, 2) + "m" + pad(seconds, 2) + "s";
+    return pad(seconds, 2) + "." + pad(mseconds, 3) + "s";
 }
 function pad(num, size) {
     return ('000000000' + num).substr(-size);
@@ -180,7 +181,7 @@ function updateLeaderboard(name, lap, times) {
             $list.append(`
 <li class="br-leaderboard-listitem">
     <div class="name">${name}</div>
-    <div class="value">${time}s</div>
+    <div class="value">${time}</div>
     <div class="value">${diff}s</div>
     <div class="value">${ldiff}s</div>
 </li>`);
