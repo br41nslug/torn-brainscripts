@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
 // @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-lap-statistics.user.js
 // @grant        GM_addStyle
+// @run-at       document-body
 // ==/UserScript==
 
 // init
@@ -51,13 +52,12 @@ GM_addStyle(`
 
 function parseLapData(results, lap, last) {
     const times = results.reduce((a, c) => {
-        //console.log(a,c[4][lap-1] - c[4][lap-2]);
         if (lap == 0) {
             a.push([ c[0], 0, 0, 0 ]);
         } else {
             a.push([
                 c[0],
-                c[4][lap-1] - c[4][lap-2],
+                c[4][lap-1] - (c[4][lap-2] || 0),
                 c[4][lap-1]
             ]);
         }
