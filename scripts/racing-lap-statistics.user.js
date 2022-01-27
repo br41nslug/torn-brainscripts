@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.1-alpha
+// @version      0.1-beta
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -37,6 +37,9 @@ GM_addStyle(`
 }
 .br-leaderboard-listitem .name {
     flex-grow: 1;
+    max-width: 72px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .br-leaderboard-listitem .value {
     width: 50px;
@@ -63,9 +66,14 @@ function parseLapData(results, lap, last) {
         return a[2] - b[2];
     });
     return times.map(([p, l, t]) => {
-        const rt = (times[0][2] - t).toFixed(3);
+        const rt = times[0][2] - t;
         const lt = last[p] || 0;
-        return [ p, formatTimeMsec(l*1000), rt, (rt - lt).toFixed(3) ];
+        return [
+            p,
+            formatTimeMsec(l*1000),
+            formatTimeSec(rt),
+            formatTimeSec(rt - lt)
+        ];
     });
     // updateLeaderboard(lap, diffs);
     // console.log('lap', lap);
@@ -75,6 +83,14 @@ function parseLapData(results, lap, last) {
 }
 
 // time format
+function formatTimeSec(sec) {
+    const _sec = Math.abs(sec);
+    console.log(sec);
+    if (_sec > 999) return sec.toFixed(0);
+    if (_sec > 99) return sec.toFixed(1);
+    if (_sec > 9) return sec.toFixed(2);
+    return sec.toFixed(3);
+}
 function formatTimeMsec(msec, alwaysShowHours = false) {
     const hours = Math.floor((msec % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((msec % (1000 * 60 * 60)) / (1000 * 60));
