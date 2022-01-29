@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.2
+// @version      0.3.1
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -17,64 +17,77 @@ interceptRaceData(function (data) {
     const raceData = processRaceData(data);
     $("#racingupdatesnew").ready(function () {
         injectSidebar();
-        let lastLap = false;
+        updateLeaderboard('', 0, parseLapData(raceData, 0));
         watchRaceBar(function (name, lap) {
             console.debug('[BrainRacing] updateLeaderboard', name, lap);
-            const lapTimes = parseLapData(raceData.results, lap, lastLap);
-            updateLeaderboard(name, lap, lapTimes);
-            lastLap = lapTimes.reduce((a, c) => {
-                a[c[0]] = c[2];
-                return a;
-            }, {});
+            const lapData = parseLapData(raceData, lap);
+            updateLeaderboard(name, lap, lapData);
         });
     });
 });
 
 // styles
 GM_addStyle(`
+.car-selected {
+    position: relative;
+}
+.d .racing-main-wrap .car-selected-wrap .car-selected.right {
+    width: 353px;
+    margin-right: -120px;
+}
+.d .racing-main-wrap .car-selected-wrap .car-selected.right.small {
+    margin-right: 0;
+    width: 233px;
+}
+.car-selected.right #br-leaderboard-title {
+    cursor: pointer;
+}
+.car-selected.right #br-leaderboard-title .expand {
+    border-color: transparent transparent transparent #666;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    filter: var(--react-dropdown-toggler-after-filter);
+    height: 0;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-5px) rotate(180deg);
+    width: 0;
+}
+.car-selected.right.small #br-leaderboard-title .expand {
+    transform: translateY(-5px);
+}
 .br-leaderboard-listitem {
     padding: 10px;
     display: flex;
 }
 .br-leaderboard-listitem .name {
     flex-grow: 1;
-    max-width: 72px;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 .br-leaderboard-listitem .value {
-    width: 50px;
+    width: 60px;
+}
+.car-selected.right.small .br-leaderboard-listitem .value.extra {
+    display: none;
 }
 .br-leaderboard-listitem .value:last-child {
     width: 40px;
 }
 `);
 
-function parseLapData(results, lap, last) {
-    const times = results.reduce((a, c) => {
-        if (lap == 0) {
-            a.push([ c[0], 0, 0, 0 ]);
-        } else {
-            a.push([
-                c[0],
-                c[4][lap-1] - (c[4][lap-2] || 0),
-                c[4][lap-1]
-            ]);
-        }
-        return a;
-    }, []).sort(function(a, b) {
-        return a[2] - b[2];
-    });
-    return times.map(([p, l, t]) => {
-        const rt = times[0][2] - t;
-        const lt = last[p] || 0;
-        return [
-            p,
-            formatTimeMsec(l*1000),
-            formatTimeSec(rt),
-            formatTimeSec(rt - lt)
-        ];
-    });
+function parseLapData(results, lap) {
+    if (lap < 1) return results[0].positions.map(playername => ([playername, 0, 0, 0 ]));
+    const lapData = results[lap - 1];
+    return lapData.positions.map(playername => ([
+        playername,
+        formatTimeMsec(lapData.times[playername]*1000),
+        formatTimeSec(lapData.behind[playername]),
+        formatTimeSec(lapData.improvement[playername])
+    ])).concat(lapData.crashed.map(playername => ([
+        playername, '', 'crashed', 'crashed'
+    ])));
 }
 
 // time format
@@ -101,34 +114,54 @@ function pad(num, size) {
 // process race data
 function processRaceData(data) {
     const carsData = data.raceData.cars;
-    const carInfo = data.raceData.carInfo;
     const trackIntervals = data.raceData.trackData.intervals.length;
-    let results = [], crashes = [];
-
-    for (const playername in carsData) {
-        const userId = carInfo[playername].userID;
-        const intervals = decode64(carsData[playername]).split(',');
-        let raceTime = 0;
-        let bestLap = 9999999999;
-        let lapTimes = [];
-
-        if (intervals.length / trackIntervals == data.laps) {
-            for (let i = 0; i < data.laps; i++) {
-                let lapTime = 0;
-                for (let j = 0; j < trackIntervals; j++) {
-                    lapTime += Number(intervals[i * trackIntervals + j]);
-                }
-                bestLap = Math.min(bestLap, lapTime);
-                raceTime += Number(lapTime);
-                lapTimes.push(raceTime);
+    const raceData = Object.keys(carsData).reduce((result, playername) => {
+        result[playername] = decode64(carsData[playername])
+            .split(',').map((nr) => Number(nr));
+        return result;
+    }, {});
+    let crashed = []; // skip future loops for this player
+    let times = {}; // cumulative player times
+    let result = [];
+    for (let l = 0; l < data.laps; l++) {
+        let lapRanking = [];
+        let lapTimes = {};
+        for (const playername in carsData) {
+            if (!times[playername]) times[playername] = 0;
+            if (crashed.includes(playername)) continue;
+            if (raceData[playername].length < (l * trackIntervals + trackIntervals)) {
+                crashed.push(playername);
+                continue;
             }
-            results.push([playername, userId, raceTime, bestLap, lapTimes]);
-        } else {
-            crashes.push([playername, userId, 'crashed']);
+            let lapTime = 0;
+            for (let i = 0; i < trackIntervals; i++) {
+                lapTime +=  raceData[playername][l * trackIntervals + i]
+            }
+            lapTime = Number(lapTime.toPrecision(4));
+            lapTimes[playername] = lapTime;
+            times[playername] += lapTime;
+            lapRanking.push([playername, times[playername]]);
         }
+        lapRanking = lapRanking.sort((a,b) => (a[1]-b[1]));
+        result.push({
+            lap: l + 1,
+            positions: lapRanking.map(p => p[0]),
+            behind: lapRanking.map(p => ([p[0], lapRanking[0][1] - p[1]])).reduce((a, c) => {
+                a[c[0]] = Number(c[1].toPrecision(4));
+                return a;
+            }, {}),
+            improvement: lapRanking
+                .map(p => ([p[0], l > 0 ? (lapRanking[0][1] - p[1] - result[l-1].behind[p[0]]) : 0]))
+                .reduce((a, c) => {
+                    a[c[0]] = Number(c[1].toPrecision(4));
+                    return a;
+                }, {}),
+            crashed: [...crashed],
+            times: lapTimes,
+        });
     }
-
-    return { results, crashes };
+    console.info('[bs] result', result);
+    return result;
 }
 
 // watch DOM
@@ -154,36 +187,43 @@ function injectSidebar() {
     if ($(".car-selected.left").size() > 0 && $(".drivers-list.right").size() > 0) {
         $(".drivers-list.right").removeClass('right').addClass('left');
         $(".car-selected.left").replaceWith($(`
-<div class="car-selected right">
-    <div class="title-black top-round" id="br-leaderboard-title">Current lap 0/100</div>
+<div class="car-selected right small">
+    <div class="title-black top-round" id="br-leaderboard-title">
+        <span>Current lap 0/100</span>
+        <div class="expand"></div>
+    </div>
     <div class="cont-black bottom-round">
         <ul class="properties-wrap" id="br-leaderboard-list"></ul>
         <div class="clear"></div>
     </div>
 </div>`));
+        $("#br-leaderboard-title").click(function () {
+            $('.car-selected').toggleClass('small');
+        });
     }
 }
 
 // update sidebar
-function updateLeaderboard(name, lap, times) {
-    const $title = $("#br-leaderboard-title");
+function updateLeaderboard(name, lap, data) {
+    const $title = $("#br-leaderboard-title span");
     const $list = $("#br-leaderboard-list");
     if ($title.length > 0 && $list.length > 0) {
+        console.log('[bs]',lap,data);
         $title.text(`Current lap ${lap}/100`);
         $list.html(`
 <li class="br-leaderboard-listitem">
 <strong class="name">Player</strong>
-<strong class="value">LT</strong>
-<strong class="value">RT</strong>
-<strong class="value">RL</strong>
+<strong class="value">TTB</strong>
+<strong class="value extra">LT</strong>
+<strong class="value extra">TI</strong>
 </li>`);
-        for (const [name, time, diff, ldiff] of times) {
+        for (const [name, time, diff, ldiff] of data) {
             $list.append(`
 <li class="br-leaderboard-listitem">
     <div class="name">${name}</div>
-    <div class="value">${time}</div>
-    <div class="value">${diff}s</div>
-    <div class="value">${ldiff}s</div>
+    <div class="value">${diff}${diff == 'crashed' ? '' : 's'}</div>
+    <div class="value extra">${time}</div>
+    <div class="value extra">${ldiff}${ldiff == 'crashed' ? '' : 's'}</div>
 </li>`);
         }
     }
@@ -199,9 +239,7 @@ function interceptRaceData(callback) {
 			if (page != "loader") return;
 			try {
 				const data = JSON.parse(xhr.responseText);
-				if (data.timeData.status >= 3) {
-					callback(data);
-				}
+				if (data.timeData.status >= 3) callback(data);
 			} catch (e) {
 				console.error(e);
 			}
