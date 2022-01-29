@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.3.1
+// @version      0.3.2
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -20,8 +20,7 @@ interceptRaceData(function (data) {
         updateLeaderboard('', 0, parseLapData(raceData, 0));
         watchRaceBar(function (name, lap) {
             console.debug('[BrainRacing] updateLeaderboard', name, lap);
-            const lapData = parseLapData(raceData, lap);
-            updateLeaderboard(name, lap, lapData);
+            updateLeaderboard(name, lap, parseLapData(raceData, lap));
         });
     });
 });
@@ -57,6 +56,9 @@ GM_addStyle(`
 .car-selected.right.small #br-leaderboard-title .expand {
     transform: translateY(-5px);
 }
+#br-leaderboard-list {
+    max-height: 850px;
+}
 .br-leaderboard-listitem {
     padding: 10px;
     display: flex;
@@ -67,13 +69,14 @@ GM_addStyle(`
     overflow: hidden;
 }
 .br-leaderboard-listitem .value {
-    width: 60px;
+    width: 70px;
+    text-align: center;
 }
 .car-selected.right.small .br-leaderboard-listitem .value.extra {
     display: none;
 }
 .br-leaderboard-listitem .value:last-child {
-    width: 40px;
+    width: 50px;
 }
 `);
 
@@ -193,7 +196,7 @@ function injectSidebar() {
         <div class="expand"></div>
     </div>
     <div class="cont-black bottom-round">
-        <ul class="properties-wrap" id="br-leaderboard-list"></ul>
+        <ul class="properties-wrap scroll-area scrollbar-black" id="br-leaderboard-list"></ul>
         <div class="clear"></div>
     </div>
 </div>`));
@@ -212,10 +215,10 @@ function updateLeaderboard(name, lap, data) {
         $title.text(`Current lap ${lap}/100`);
         $list.html(`
 <li class="br-leaderboard-listitem">
-<strong class="name">Player</strong>
-<strong class="value">TTB</strong>
-<strong class="value extra">LT</strong>
-<strong class="value extra">TI</strong>
+<strong class="name"><br>Player</strong>
+<strong class="value">Time Behind</strong>
+<strong class="value extra"><br>Lap Time</strong>
+<strong class="value extra">Time Improved</strong>
 </li>`);
         for (const [name, time, diff, ldiff] of data) {
             $list.append(`
