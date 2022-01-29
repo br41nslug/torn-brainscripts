@@ -332,22 +332,17 @@ function processChartData(data) {
         result[player] = pos;
         return result;
     }, {});
-    //console.info('[bs] chart3', playerPositionCompressed);
     // build datasets
     const colors = Object.values(data.raceData.carInfo).reduce(function (acc, cur) {
         acc[cur.playername] = race_colors[cur.color - 1];
         return acc;
     }, {});
-    const datasets = Object.keys(playerPositionCompressed).map(function (player) {
-        return {
-            label: player,
-            data: playerPositionCompressed[player].map(([x, y]) => ({ x, y })),
-            borderColor: colors[player],
-            stepped: true,
-        };
-    });
-    console.info('[bs] chart4', datasets);
-    return datasets;
+    return Object.keys(playerPositionCompressed).map((player) => ({
+        label: player,
+        data: playerPositionCompressed[player].map(([x, y]) => ({ x, y })),
+        borderColor: colors[player],
+        stepped: true,
+    }));
 }
 
 // watch DOM
