@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.4.0
+// @version      0.4.2
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -65,6 +65,9 @@ GM_addStyle(`
 .br-leaderboard-listitem {
     padding: 10px;
     display: flex;
+}
+.d .racing-main-wrap .car-selected-wrap .properties-wrap > .br-leaderboard-listitem.highlight {
+    color: #7ccd62;
 }
 .br-leaderboard-listitem .name {
     flex-grow: 1;
@@ -198,9 +201,10 @@ function parseLapData(results, lap) {
         playername,
         formatTimeMsec(lapData.times[playername]*1000),
         formatTimeSec(lapData.behind[playername]),
-        formatTimeSec(lapData.improvement[playername])
+        formatTimeSec(lapData.improvement[playername]),
+        playername == lapData.bestLap
     ])).concat(lapData.crashed.map(playername => ([
-        playername, '', 'crashed', 'crashed'
+        playername, '', 'crashed', 'crashed', false
     ])));
 }
 
@@ -266,6 +270,8 @@ function processRaceData(data) {
         result.push({
             lap: l + 1,
             positions: lapRanking.map(p => p[0]),
+            bestLap: Object.keys(lapTimes).map(player => ([player, lapTimes[player]]))
+                .sort((a,b) => (a[1]-b[1]))[0][0],
             behind: lapRanking.map(p => ([p[0], lapRanking[0][1] - p[1]])).reduce((a, c) => {
                 a[c[0]] = Number(c[1].toPrecision(4));
                 return a;
@@ -445,9 +451,9 @@ function updateLeaderboard(name, lap, data) {
 <strong class="value extra"><br>Lap Time</strong>
 <strong class="value extra">Time Improved</strong>
 </li>`);
-        for (const [name, time, diff, ldiff] of data) {
+        for (const [name, time, diff, ldiff, highlight] of data) {
             $list.append(`
-<li class="br-leaderboard-listitem">
+<li class="br-leaderboard-listitem${highlight?' highlight':''}">
     <div class="name">${name}</div>
     <div class="value">${diff}${diff == 'crashed' ? '' : 's'}</div>
     <div class="value extra">${time}</div>
