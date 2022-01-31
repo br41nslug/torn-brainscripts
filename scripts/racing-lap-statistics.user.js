@@ -220,6 +220,13 @@ function injectSidebar() {
     }
 }
 
+function bold(val, cond) {
+    return cond ? `<strong>${val}</strong>` : val;
+}
+function crashed(val) {
+    return val == 'crashed' ? 'crashed' : val + 's';
+}
+
 // update sidebar
 function updateLeaderboard(_name, lap, data) {
     const $title = $("#br-leaderboard-title span");
@@ -235,12 +242,13 @@ function updateLeaderboard(_name, lap, data) {
 <strong class="value extra">Time Improved</strong>
 </li>`);
         for (const [name, time, diff, ldiff, highlight] of data) {
+            const _selected = name == _name;
             $list.append(`
 <li class="br-leaderboard-listitem${highlight?' highlight':''}">
-    <div class="name">${name == _name ? `<strong>${name}</strong>` : name}</div>
-    <div class="value">${diff}${diff == 'crashed' ? '' : 's'}</div>
-    <div class="value extra">${time}</div>
-    <div class="value extra">${ldiff}${ldiff == 'crashed' ? '' : 's'}</div>
+    <div class="name">${bold(name, _selected)}</div>
+    <div class="value">${bold(crashed(diff), _selected)}</div>
+    <div class="value extra">${bold(time, _selected)}</div>
+    <div class="value extra">${bold(crashed(ldiff), _selected)}</div>
 </li>`);
         }
     }
