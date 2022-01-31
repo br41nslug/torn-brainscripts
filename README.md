@@ -6,7 +6,7 @@ A collection of somewhat useful and less useful userscripts i've build or adapte
 # Racing Scripts
 
 ## Lap Statistics
-This scripts removes the left sidebar show your current car (i've always found that information quite useless) and adds a new bar to the right of the racing display instead! This sidebar contains a list of all drivers with the selected driver highlighted in bold and the driver with the fastest current lap in green.
+This scripts removes the left sidebar show your current car stats (i've always found that information quite useless) and adds a new panel to the right of the racing display filled with statistics for the current lap instead! This sidebar contains a list of all drivers with the selected driver highlighted in bold and the driver with the fastest current lap in green.
 > Disclaimer: This script does show the future as you are seeing the **end results** for the **current lap**.
 
 ### Features
