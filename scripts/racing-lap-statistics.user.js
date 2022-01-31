@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.4.4
+// @version      0.4.5
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -11,9 +11,10 @@
 // @run-at       document-body
 // ==/UserScript==
 
-// init
 console.info('[BrainRacing]', 'Extra lap statistics');
+let lastRace = null;
 interceptRaceData(function (data) {
+    if (data.raceID == lastRace) return;
     data = decodeData(data);
     const raceData = processRaceData(data);
     $("#racingupdatesnew").ready(function () {
@@ -23,6 +24,7 @@ interceptRaceData(function (data) {
             console.debug('[BrainRacing] updateLeaderboard', name, lap);
             updateLeaderboard(name, lap, parseLapData(raceData, lap));
         });
+        lastRace = data.raceID;
     });
 });
 
