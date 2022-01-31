@@ -4,6 +4,34 @@ A collection of somewhat useful and less useful userscripts i've build or adapte
 > These scripts have been created and tested using [Chrome](https://www.google.com/chrome/) and [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo). They might work in other browsers/runtimes but i give no guarantees! Altough you're welcome to open an issue if it's not working for you.
 
 # Racing Scripts
+
+## Lap Statistics
+This scripts removes the left sidebar show your current car (i've always found that information quite useless) and adds a new bar to the right of the racing display instead! This sidebar contains a list of all drivers with the selected driver highlighted in bold and the driver with the fastest current lap in green.
+> Disclaimer: This script does show the future as you are seeing the **end results** for the **current lap**.
+
+### Features
+- Removes left sidebar for an active or finished race (to not interfere with changing cars or leaving the race)
+- Adds a statistics sidebar to the right showing `Time behind` (total time behind the leader shown in negative seconds)
+- The sidebar can be expanded to also show the `Lap time` and `Time improved` (time improvement relative to the leader)
+
+Install Link: [scripts/racing-lap-statistics.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-lap-statistics.user.js)\
+![Screenshot Speedway collapsed](/images/lap-stats-collapsed.png)
+![Screenshot Speedway expanded](/images/lap-stats-expanded.png)
+
+## Race Charts
+This script adds a chart showing the positions held by each player over the duration of the match. This can be very useful for getting a quick judgement of whether it was a close match, a very one-sided one, if someone made a late comeback and more. 
+> This is most likely not compatible with mobile devices! Also with races including lots of members the charts can get crowded and quite heavy for the browser.
+
+### Features
+- Adds a button to trigger the popup at the top right of a race display
+- A popup containing an interesting chart (and hopefull more in the future)
+- A link to clear the chart on top this will disable all lines on the chart
+- Cliking racer names will enable/disable their charts
+
+Install Link: [scripts/racing-charts.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-charts.user.js)\
+![Screenshot 100lap 2member Speedway](/images/racing-chart-2person-100lap.png)\
+![Screenshot 100lap 43member Sewage](/images/racing-chart-43person-100lap.png)
+
 ## Custom Race Presets
 Adds custom preset shortcuts when creating a new race. 
 Configuration is possible both in the script itself or within Torn (presets will be persisted in the browser in this case).
@@ -57,20 +85,6 @@ Install Link: [scripts/racing-change-banner.user.js](https://raw.githubuserconte
 ![Screenshot Class C](/images/change-banner-C.png)\
 ![Screenshot Class D](/images/change-banner-D.png)\
 ![Screenshot Class E](/images/change-banner-E.png)
-
-## Race Charts
-This script adds a chart showing the positions held by each player over the duration of the match. This can be very useful for getting a quick judgement of whether it was a close match, a very one-sided one, if someone made a late comeback and more. 
-> This is most likely not compatible with mobile devices! Also with races including lots of members the charts can get crowded and quite heavy for the browser.
-
-### Features
-- Adds a button to trigger the popup at the top right of a race display
-- A popup containing an interesting chart (and hopefull more in the future)
-- A link to clear the chart on top this will disable all lines on the chart
-- Cliking racer names will enable/disable their charts
-
-Install Link: [scripts/racing-charts.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-charts.user.js)\
-![Screenshot 100lap 2member Speedway](/images/racing-chart-2person-100lap.png)\
-![Screenshot 100lap 43member Sewage](/images/racing-chart-43person-100lap.png)
 
 # Utility Scripts
 ## Custom Menu Links

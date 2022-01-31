@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.4.3
+// @version      0.4.4
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
