@@ -104,4 +104,4 @@ Classic Style:
 Current Style:
 ![Current Button Style](/images/current-button-style.png)
 
-Install Link: [scripts/revert-button-style.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/revert-button-style.user.js)\
+Install Link: [scripts/revert-button-style.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/revert-button-style.user.js)
