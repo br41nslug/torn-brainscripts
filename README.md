@@ -94,3 +94,14 @@ Currently this script still requires you to configure the links inside the scrip
 
 Install Link: [scripts/custom-race-presets.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-menu-links.user.js)\
 ![Screenshot Custom Menu Links](/images/custom-menu-links-example.png)
+
+## Classic Button Style
+Reverts the recent button style change back to the classic style.
+
+Classic Style:
+![Old Button Style](/images/old-button-style.png)
+
+Current Style:
+![Current Button Style](/images/current-button-style.png)
+
+Install Link: [scripts/revert-button-style.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/revert-button-style.user.js)\
