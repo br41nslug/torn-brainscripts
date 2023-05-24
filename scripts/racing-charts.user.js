@@ -6,6 +6,7 @@
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
+// @downloadURL  https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-charts.user.js
 // @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-charts.user.js
 // @require      https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/lib/chart.min.js
 // @grant        GM_addStyle

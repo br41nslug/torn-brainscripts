@@ -6,6 +6,7 @@
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/*
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
+// @downloadURL  https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-menu-links.user.js
 // @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-menu-links.user.js
 // @grant        GM_addStyle
 // ==/UserScript==
