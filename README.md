@@ -106,3 +106,9 @@ Current Style:
 
 Install Link: [scripts/revert-button-style.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/revert-button-style.user.js)\
 Install Link (TornPDA): [scripts/revert-button-style.pda.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/revert-button-style.user.js)
+
+## Attack Stealth Meter
+Adds a big stealth meter in the attack title matching the small sidebar.
+
+Install Link: [scripts/attack-stealth.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/attack-stealth.user.js)\
+![Screenshot Stealth Meter](/images/stealth-meter-example.png)
