@@ -6,7 +6,7 @@
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/loader.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
-// @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-car-skin.user.js
+// @updateURL    https://github.com/br41nslug/torn-brainscripts/raw/main/scripts/racing-car-skins.user.js
 // @grant        none
 // ==/UserScript==
 

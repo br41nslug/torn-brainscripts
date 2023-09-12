@@ -9,7 +9,7 @@ A collection of somewhat useful and less useful userscripts i've build or adapte
 This script allows you to inject any custom car skin based on name. This is a standalone version of the car skinning feature included in [Lugburz' Racing Enhancements](https://www.torn.com/forums.php#/p=threads&t=16157684).
 The default settings are to use the old class A car images as skins but you're free to edit the script to use any image you like!
 
-Install Link: [scripts/racing-car-skins.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-car-skins.user.js)\
+Install Link: [scripts/racing-car-skins.user.js](https://github.com/br41nslug/torn-brainscripts/raw/main/scripts/racing-car-skins.user.js)\
 Without skins:\
 ![Screenshot no skins](/images/cars-no-skins.png)
 With skins:\
