@@ -5,6 +5,17 @@ A collection of somewhat useful and less useful userscripts i've build or adapte
 
 # Racing Scripts
 
+## Custom Car Skinning
+This script allows you to inject any custom car skin based on name. This is a standalone version of the car skinning feature included in [Lugburz' Racing Enhancements](https://www.torn.com/forums.php#/p=threads&t=16157684).
+The default settings are to use the old class A car images as skins but you're free to edit the script to use any image you like!
+
+Install Link: [scripts/racing-car-skins.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-car-skins.user.js)\
+Without skins:\
+![Screenshot no skins](/images/cars-no-skins.png)
+With skins:\
+![Screenshot with skins](/images/cars-with-skins.png)
+
+
 ## Lap Statistics
 This scripts removes the left sidebar show your current car stats (i've always found that information quite useless) and adds a new panel to the right of the racing display filled with statistics for the current lap instead! This sidebar contains a list of all drivers with the selected driver highlighted in bold and the driver with the fastest current lap in green.
 > Disclaimer: This script does show the future as you are seeing the **end results** for the **current lap**.
