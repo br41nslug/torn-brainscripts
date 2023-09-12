@@ -37,9 +37,7 @@ const matchCar = (name) => $([
 function updateImages() {
     for (const [name, img] of Object.entries(cars)) {
         const images = matchCar(name);
-        console.log('blah', images)
         if (images.length > 0) {
-            console.log('blah', images)
             images.each((i, image) => {
                 image.removeAttribute('srcset');
                 image.setAttribute('src', img);
