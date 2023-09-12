@@ -57,6 +57,4 @@ if (mainWindow.length > 0) {
 
     observer.observe(mainWindow[0], { subtree: true, childList: true });
     updateImages();
-} else {
-    console.log('x no container')
 }
