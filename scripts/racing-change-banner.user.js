@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         BrainRacing: Change Racing Banner
 // @namespace    brainslug.torn.racing
-// @version      0.4
+// @version      0.4.1
 // @description  Allows you to pick different race class decoration
 // @author       Brainslug [2323221]
-// @match        https://www.torn.com/loader.php?sid=racing*
+// @match        https://www.torn.com/page.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
 // @downloadURL  https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-change-banner.user.js
 // @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/racing-change-banner.user.js

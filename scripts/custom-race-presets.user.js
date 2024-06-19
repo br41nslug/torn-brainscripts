@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         BrainRacing: Custom Race Presets
 // @namespace    brainslug.torn.racing
-// @version      0.3
+// @version      0.3.1
 // @description  Adding quick preset links for dedicated racers.
 // @author       Brainslug [2323221]
-// @match        https://www.torn.com/loader.php?sid=racing*
+// @match        https://www.torn.com/page.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?domain=torn.com
 // @downloadURL  https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-race-presets.user.js
 // @updateURL    https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/custom-race-presets.user.js
