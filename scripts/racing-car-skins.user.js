@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         BrainRacing - Custom Car Skins
 // @namespace    brainslug.torn.racing
-// @version      0.1.1
+// @version      0.1.2
 // @description  Allows you to set custom car skins as decoration, sets the old skins by default
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/page.php?sid=racing*
+// @match        https://www.torn.com/loader.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @updateURL    https://github.com/br41nslug/torn-brainscripts/raw/main/scripts/racing-car-skins.user.js
 // @grant        none
