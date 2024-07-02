@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Extra Lap Statistics
 // @namespace    brainslug.torn.racing
-// @version      0.4.7
+// @version      0.4.8
 // @description  Removing the useless left sidebar and adding statistics on the right!
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/page.php?sid=racing*
@@ -264,7 +264,7 @@ function interceptRaceData(callback) {
         if (xhr.readyState > 3 && xhr.status == 200) {
             let url = settings.url;
             if (url.indexOf("torn.com/") < 0) url = "torn.com" + (url.startsWith("/") ? "" : "/") + url;
-			if (!url.includes('sid=racing')) return;
+			if (!url.includes('sid=raceData')) return;
 			try {
 				const data = JSON.parse(xhr.responseText);
 				if (data.timeData.status >= 3) callback(data);

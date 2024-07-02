@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BrainRacing: Race Charts
 // @namespace    brainslug.torn.racing
-// @version      0.9.2
+// @version      0.9.3
 // @description  Adds a racing chart popup currently only supporting position changes.
 // @author       Brainslug [2323221]
 // @match        https://www.torn.com/page.php?sid=racing*
@@ -309,7 +309,7 @@ function interceptRaceData(callback) {
         if (xhr.readyState > 3 && xhr.status == 200) {
             let url = settings.url;
             if (url.indexOf("torn.com/") < 0) url = "torn.com" + (url.startsWith("/") ? "" : "/") + url;
-			if (!url.includes('sid=racing')) return;
+			if (!url.includes('sid=raceData')) return;
 			try {
 				const data = JSON.parse(xhr.responseText);
 				if (data.timeData.status >= 3) callback(data);
