@@ -123,3 +123,9 @@ Adds a big stealth meter in the attack title matching the small sidebar.
 
 Install Link: [scripts/attack-stealth.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/attack-stealth.user.js)\
 ![Screenshot Stealth Meter](/images/stealth-meter-example.png)
+
+## Attack HP Meter
+Adds a big HP meter in the attack title for both attacker and defender.
+
+Install Link: [scripts/attack-hp.user.js](https://raw.githubusercontent.com/br41nslug/torn-brainscripts/main/scripts/attack-hp.user.js)\
+![Screenshot HP Meter](/images/hp-meter-example.png)
